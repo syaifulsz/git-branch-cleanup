@@ -9,14 +9,16 @@ use \SSZ\GitBranchCleanup\Libs\Helper;
 
 header('Content-Type: application/json');
 
-if (!file_exists(__DIR__ . '/git-branch.csv'))
+if (!file_exists(__DIR__ . '/git-branch.csv')) {
     echo json_encode(['git-branch.csv not found! Please run `git-branch.sh` script.']);
     die();
+}
 
 $csvParsed = array_map('str_getcsv', file(__DIR__ . '/git-branch.csv'));
-if (!$csvParsed)
+if (!$csvParsed) {
     echo json_encode(['No data is found.']);
     die();
+}
 
 $actionAuthor = isset($_GET['author']) && $_GET['author'] ? $_GET['author'] : null;
 $data = [];
