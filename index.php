@@ -7,14 +7,19 @@ require realpath(__dir__ . '/models/model.php');
 use \SSZ\GitBranchCleanup\Models\Model;
 use \SSZ\GitBranchCleanup\Libs\Helper;
 
+header('Content-Type: application/json');
+
+if (!file_exists(__DIR__ . '/git-branch.csv'))
+    echo json_encode(['git-branch.csv not found! Please run `git-branch.sh` script.']);
+    die();
+
 $csvParsed = array_map('str_getcsv', file(__DIR__ . '/git-branch.csv'));
+if (!$csvParsed)
+    echo json_encode(['No data is found.']);
+    die();
 
-if (!$csvParsed) throw new Error('No data available');
-
-$actionAuthor   = isset($_GET['author']) && $_GET['author'] ? $_GET['author'] : null;
-
+$actionAuthor = isset($_GET['author']) && $_GET['author'] ? $_GET['author'] : null;
 $data = [];
-
 foreach ($csvParsed as $parse) {
     $branch = new Model([
         'date' => $parse[0],
@@ -44,4 +49,5 @@ if ($actionAuthor) {
     $data['result'] = isset($data['result'][$actionAuthor]) ? $data['result'][$actionAuthor] : ['Author not found.'];
 }
 
-header('Content-Type: application/json'); print_r(json_encode($data)); die;
+print_r(json_encode($data));
+die();
