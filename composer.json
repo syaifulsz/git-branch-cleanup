@@ -1,0 +1,6 @@
+{
+    "require": {
+        "nesbot/carbon": "^1.22",
+        "cocur/slugify": "^2.5"
+    }
+}
